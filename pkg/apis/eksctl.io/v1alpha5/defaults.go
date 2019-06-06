@@ -1,5 +1,40 @@
 package v1alpha5
 
+import (
+	"fmt"
+)
+
+// SupportedCloudWatchClusterLoggingTypes retuls all supported logging facilities
+func SupportedCloudWatchClusterLoggingTypes() []string {
+	return []string{"api", "audit", "authenticator", "controllerManager", "scheduler"}
+}
+
+// SetClusterConfigDefaults will set defaults for a given cluster
+func SetClusterConfigDefaults(cfg *ClusterConfig) error {
+	if cfg.CloudWatch != nil && cfg.CloudWatch.ClusterLogging != nil {
+		for _, logType := range cfg.CloudWatch.ClusterLogging.EnableTypes {
+			switch logType {
+			case "all", "*":
+				cfg.CloudWatch.ClusterLogging.EnableTypes = SupportedCloudWatchClusterLoggingTypes()
+			}
+		}
+		// NOTE: we don't use k8s.io/apimachinery/pkg/util/sets here to keep API package free of dependencies
+		for _, logType := range cfg.CloudWatch.ClusterLogging.EnableTypes {
+			isUnknown := true
+			for _, knownLogType := range SupportedCloudWatchClusterLoggingTypes() {
+				if logType == knownLogType {
+					isUnknown = false
+				}
+			}
+			if isUnknown {
+				return fmt.Errorf("log type %q is unknown", logType)
+			}
+		}
+	}
+
+	return nil
+}
+
 // SetNodeGroupDefaults will set defaults for a given nodegroup
 func SetNodeGroupDefaults(_ int, ng *NodeGroup) error {
 	if ng.InstanceType == "" {

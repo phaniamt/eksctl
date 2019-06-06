@@ -20,6 +20,7 @@ import (
 	api "github.com/weaveworks/eksctl/pkg/apis/eksctl.io/v1alpha5"
 	"github.com/weaveworks/eksctl/pkg/authconfigmap"
 	"github.com/weaveworks/eksctl/pkg/ctl/cmdutils"
+	"github.com/weaveworks/eksctl/pkg/eks"
 	"github.com/weaveworks/eksctl/pkg/iam"
 	"github.com/weaveworks/eksctl/pkg/testutils/aws"
 	. "github.com/weaveworks/eksctl/pkg/testutils/matchers"
@@ -219,6 +220,64 @@ var _ = Describe("(Integration) Create, Get, Scale & Delete", func() {
 						fmt.Fprintf(GinkgoWriter, "ds.Status = %#v", ds.Status)
 					}
 				})
+			})
+
+			Context("toggle CloudWatch logging", func() {
+				cfg := &api.ClusterConfig{
+					Metadata: &api.ClusterMeta{
+						Name:   clusterName,
+						Region: region,
+					},
+				}
+				ctl := eks.New(&api.ProviderConfig{Region: region}, cfg)
+
+				{
+					enabled, disable, err := ctl.GetCurrentClusterConfigForLogging(cfg.Metadata)
+					Expect(err).ShouldNot(HaveOccurred())
+					Expect(enabled.List()).To(HaveLen(0))
+					Expect(disable.List()).To(HaveLen(5))
+				}
+
+				eksctlSuccess("utils", "enable-logging",
+					"--name", clusterName,
+					"--region", region,
+					"--api",
+					"--controllerManager",
+				)
+
+				{
+					enabled, disable, err := ctl.GetCurrentClusterConfigForLogging(cfg.Metadata)
+					Expect(err).ShouldNot(HaveOccurred())
+					Expect(enabled.List()).To(HaveLen(2))
+					Expect(disable.List()).To(HaveLen(3))
+				}
+
+				eksctlSuccess("utils", "enable-logging",
+					"--name", clusterName,
+					"--region", region,
+					"--all",
+				)
+
+				{
+					enabled, disable, err := ctl.GetCurrentClusterConfigForLogging(cfg.Metadata)
+					Expect(err).ShouldNot(HaveOccurred())
+					Expect(enabled.List()).To(HaveLen(5))
+					Expect(disable.List()).To(HaveLen(0))
+				}
+
+				eksctlSuccess("utils", "enable-logging",
+					"--name", clusterName,
+					"--region", region,
+					"--all", "false",
+				)
+
+				{
+					enabled, disable, err := ctl.GetCurrentClusterConfigForLogging(cfg.Metadata)
+					Expect(err).ShouldNot(HaveOccurred())
+					Expect(enabled.List()).To(HaveLen(0))
+					Expect(disable.List()).To(HaveLen(5))
+					Expect(disable.HasAll(api.SupportedCloudWatchClusterLoggingTypes()...)).To(BeTrue())
+				}
 			})
 
 			Context("and manipulating iam identity mappings", func() {
