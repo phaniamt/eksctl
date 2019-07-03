@@ -17,12 +17,15 @@ contribution. No action from you is required, but it's a good idea to see the
 
 # Chat
 
-The project uses Slack. If you get stuck or just have a question then you are encouraged to join the 
-[Weave Community](https://weaveworks.github.io/community-slack/) Slack workspace and use the 
-[#eksctl](https://weave-community.slack.com/messages/eksctl/) channel.
+The project uses Slack. If you get stuck or just have a question then you are encouraged to join the
+[Weave Community](https://weaveworks.github.io/community-slack/) Slack workspace and use the
+[#eksctl](https://weave-community.slack.com/messages/eksctl/) channel and/or the [mailing
+list](maillist).
 
-Regular contributor meetings are held on Slack, see [`docs/contributor-meetings.md`](docs/contributor-meetings.md) for 
+Regular contributor meetings are held on Slack, see [`docs/contributor-meetings.md`](docs/contributor-meetings.md) for
 the latest information.
+
+[maillist]: https://groups.google.com/forum/#!forum/eksctl-dev
 
 # Getting Started
 
@@ -53,7 +56,7 @@ Make a fork of this repository and clone it by running:
 git clone git@github.com:<yourusername>/eksctl.git
 ```
 
-It is not recommended to clone under your `GOPATH` (if you define one). Otherwise, you will need to set 
+It is not recommended to clone under your `GOPATH` (if you define one). Otherwise, you will need to set
 `GO111MODULE=on` explicitly.
 
 
@@ -61,7 +64,7 @@ It is not recommended to clone under your `GOPATH` (if you define one). Otherwis
 
 Make sure you can run the tests and build the binary.
 
-```bash 
+```bash
 make install-build-deps
 make test
 make eksctl
@@ -72,13 +75,13 @@ make eksctl
 > TODO: Improve Windows instructions, ensure `go build` works.
 
 
-There are integration tests for *eksctl* being developed and more details of how to run them will be included here. You 
+There are integration tests for *eksctl* being developed and more details of how to run them will be included here. You
 can follow the progress [here](https://github.com/weaveworks/eksctl/issues/151).
 
 #### 4. Write your feature
 
-- Find an [issue](https://github.com/weaveworks/eksctl/issues) to work on or create your own. If you are a new 
-contributor take a look at issues marked with 
+- Find an [issue](https://github.com/weaveworks/eksctl/issues) to work on or create your own. If you are a new
+contributor take a look at issues marked with
 [good first issue](https://github.com/weaveworks/eksctl/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
 
 - Then create a topic branch from where you want to base your work (usually branched from master):
@@ -87,10 +90,10 @@ contributor take a look at issues marked with
     git checkout -b <feature-name>
     ```
 
-- Write your feature. Make commits of logical units and make sure your commit messages are in the 
+- Write your feature. Make commits of logical units and make sure your commit messages are in the
 [proper format](#format-of-the-commit-message).
 
-- Add automated tests to cover your changes. See the [az](https://github.com/weaveworks/eksctl/tree/master/pkg/az) 
+- Add automated tests to cover your changes. See the [az](https://github.com/weaveworks/eksctl/tree/master/pkg/az)
 package for a good example of tests.
 
 - If needed, update the documentation, either in the [README](README.md) or in the [docs](docs/) folder.
@@ -99,15 +102,15 @@ package for a good example of tests.
 
 #### 5. Submit a pull request
 
-Push your changes to your fork and submit a pull request to the original repository. If your PR is a work in progress 
-then make sure you prefix the title with `WIP: `. This lets everyone know that this is still being worked on. Once its 
+Push your changes to your fork and submit a pull request to the original repository. If your PR is a work in progress
+then make sure you prefix the title with `WIP: `. This lets everyone know that this is still being worked on. Once its
 ready remove the `WIP: ` title prefix and where possible squash your commits.
 
 ```bash
 git push <username> <feature-name>
 ```
 
-Our CircleCI integration will run the automated tests and give you feedback in the review section. We will review your 
+Our CircleCI integration will run the automated tests and give you feedback in the review section. We will review your
 changes and give you feedback as soon as possible.
 
 # Acceptance policy
@@ -122,7 +125,7 @@ These things will make a PR more likely to be accepted:
 
 In general, we will merge a PR once a maintainer has reviewed and approved it.
 Trivial changes (e.g., corrections to spelling) may get waved through.
-For substantial changes, more people may become involved, and you might get asked to resubmit the PR or divide the 
+For substantial changes, more people may become involved, and you might get asked to resubmit the PR or divide the
 changes into more than one PR.
 
 ### Format of the Commit Message
@@ -181,10 +184,10 @@ At present we ignore flaky tests, so if you see output like show below, you don'
 ```
 Summarizing 2 Failures:
 
-[Fail] (Integration) Create, Get, Scale & Delete when creating a cluster with 1 node and add the second nodegroup and delete the second nodegroup [It] {FLAKY: https://github.com/weaveworks/eksctl/issues/717} should make it 4 nodes total 
+[Fail] (Integration) Create, Get, Scale & Delete when creating a cluster with 1 node and add the second nodegroup and delete the second nodegroup [It] {FLAKY: https://github.com/weaveworks/eksctl/issues/717} should make it 4 nodes total
 /go/src/github.com/weaveworks/eksctl/integration/creategetdelete_test.go:376
 
-[Fail] (Integration) Create, Get, Scale & Delete when creating a cluster with 1 node and scale the initial nodegroup back to 1 node [It] {FLAKY: https://github.com/weaveworks/eksctl/issues/717} should make it 1 nodes total 
+[Fail] (Integration) Create, Get, Scale & Delete when creating a cluster with 1 node and scale the initial nodegroup back to 1 node [It] {FLAKY: https://github.com/weaveworks/eksctl/issues/717} should make it 1 nodes total
 /go/src/github.com/weaveworks/eksctl/integration/creategetdelete_test.go:403
 
 Ran 26 of 26 Specs in 2556.238 seconds
