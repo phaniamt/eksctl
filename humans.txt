@@ -47,11 +47,8 @@ Yannig Perré            @Yannig
 Chetan                  @cPu1
 Marc Carré              @marccarre
 Cristian Radu           @cristian-radu
-<<<<<<< HEAD
 Bianca Cheng Costanzo   @bia
-=======
 Daniel Holbach          @dholbach
->>>>>>> d48f2b6d... document eksctl-dev mailing list
 
 /* Thanks */
 

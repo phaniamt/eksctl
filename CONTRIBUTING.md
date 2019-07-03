@@ -25,7 +25,7 @@ list](maillist).
 Regular contributor meetings are held on Slack, see [`docs/contributor-meetings.md`](docs/contributor-meetings.md) for
 the latest information.
 
-[maillist]: https://groups.google.com/forum/#!forum/eksctl-dev
+[maillist]: https://groups.google.com/forum/#!forum/eksctl
 
 # Getting Started
 
