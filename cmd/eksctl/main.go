@@ -3,9 +3,13 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
+	"strconv"
+	"strings"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
+	k8sruntime "k8s.io/apimachinery/pkg/util/runtime"
 
 	"github.com/weaveworks/eksctl/pkg/ctl/cmdutils"
 	"github.com/weaveworks/eksctl/pkg/ctl/completion"
@@ -31,6 +35,17 @@ func addCommands(rootCmd *cobra.Command, flagGrouping *cmdutils.FlagGrouping) {
 }
 
 func main() {
+
+	// Log internally-logged kubernetes errors uniformly
+	logK8sError := func(err error) {
+		// we need to go one level deeper than k8sruntime.HandleError
+		_, file, line, _ := runtime.Caller(1)
+		idx := strings.Index(file, "/k8s.io/")
+		finalFileLine := file[idx+1:] + ":" + strconv.Itoa(line)
+		logger.Warning("Internal Kubernetes error at %s: %s", finalFileLine, err)
+	}
+	k8sruntime.ErrorHandlers = []func(error){logK8sError}
+
 	cobra.EnableCommandSorting = false
 
 	rootCmd := &cobra.Command{
